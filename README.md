@@ -3,7 +3,7 @@
 ## To Do
 
 * [ ] Edit Text
-* [ ] Crete Supplmentatry R Script
+* [ ] Crete Supplementary R Script
 * [ ] Create Supp R Markdown 
 
 No introduction to the R programming language in 2020 would be complete without an introduction to the [tidyverse](https://www.tidyverse.org/).
@@ -19,9 +19,8 @@ By the end of this lesson you will be able to:
 
 * [ ] Explain the basic rationale behind tidy data and why a suite of software was built around this principle
 * [ ] Name major packages in tidyverse and what they are meant to do 
-* [ ] Go over five basic verbs in dplyr 
-* [ ] Use the pipe operator `%>%` from the maggritr package 
-* [ ] Reproduce a data analysis using tools from the tidyverse that we had done formerly with pandas 
+* [ ] Use `select()`, `filter()`, `group_by()`, `summarise()`, and `arrange()` to manipulate and collapse tibbles (the tidyverse data frame)
+* [ ] Use the pipe operator `%>%` from the magrittr package in conjunction with the functions above
 
 ## Tidyverse 
 
@@ -32,6 +31,8 @@ By this point, you have a lot of lived experience cleaning data and hopefully re
 In the world of R, a growing set of tools has been developed over the past decade or so that has tried to make working with data easier called the Tidyverse.
 
 There's a wealth of information you can read about ranging from [this blog post]()(https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) to the actual [paper](https://vita.had.co.nz/papers/tidy-data.html) that was written about tidy principles, but for our purposes we just have to know that the tidyverse is a set of package that work together because the "share common data representation and API design".
+
+One you have data in a tidy format-- meaning each variable is a column, each observation is a row, and each type of observational unit forms a table-- you can go to town on your data set with the tidyverse!
 
 We had you download the tidyverse in step one of this tutorial, but if you have skipped that you need to run the below command in your R console.
 If you're prompted to download more software, make sure to do that! 
@@ -71,9 +72,9 @@ We won't get to everything, but if you do want to do a proper dive into the tidy
 ## Five Verbs 
 
 Let's now continue to explore the tidyverse with the `dplyr` package.
-Here we'll learn about five verbs and the pipe operator.
+Here we'll learn about five verbs that you will probably use most frequenlty in your data cleaning, as well as the pipe operator.
 
-This first bit of code that you need to run in RStudio grabs a few different libraries we will be using then import in the `tips.csv` data set as the object `tips` as a special type of data frame in the tidyverse called a tibble. 
+This first bit of code that you need to run in RStudio grabs a few different libraries we will be using then we import in the `tips.csv` data set as the object `tips` as a special type of data frame in the tidyverse called a tibble. 
 
 ```{r}
 library(dplyr) # for manipulating data
@@ -94,8 +95,9 @@ select(tips, total_bill)
 ```
 
 The `select()` command takes two arguments here.
-The first is the data frame that we want to begin to manipulate.
-Notice here that with select() and future dplyr verbs, the first argument that the function expects is the tibble we want to manipulate.
+The first argument is the data frame that we want to begin to manipulate.
+
+> Notice here that with `select()` and future dplyr verbs, the first argument that the function expects is the tibble we want to manipulate.
 This is going to become very important very soon. 
 
 The second argument that `select()` will take are what columns we want to ... select.
@@ -116,7 +118,7 @@ The call below gives us the exact same output as before but is a bit more concis
 select(tips, total_bill:size)
 ```
 
-But maybe the reason that we are doing this is just because we want to drop that nasty `X1` column that came for the ride because we've imported this `pandas` data frame.
+But maybe the reason that we are doing this is just because we want to drop that `X1` column that came for the ride because we've imported this `pandas` data frame.
 Instead of saying what columns we do want, it might be easier to just say what we don't want.
 
 
@@ -135,12 +137,13 @@ select(tips, starts_with("s"))
 
 And of course if there's a `starts_with()`, there's also an `ends_with()`.
 
-If you're going to be using dplyr a lot, it's worth [reading a bit of the documentation on it]() as some functions like `pivot_longer()`, which is used to take wide data to long format data, use `select()` syntax. 
+If you're going to be using dplyr a lot, it's worth [reading a bit of the documentation on it](https://dplyr.tidyverse.org/reference/select.html) as some functions like `pivot_longer()`, which is used to take wide data to long format data, use `select()` syntax. 
 
 So if select is for columns, the what do we have for rows?
 It's a function called `filter()`.
 
-Filter works very much like `select()` in that as a function, the first thing it expects is the data frame where you want to pick specific rows to subset out. 
+Filter works very much like `select()` in that as a function, the first argument it expects is the data frame where you want to pick specific rows to subset out. 
+
 It can deal with both numeric and character input as seen below as well as conditional operators! 
 
 Try to run the code below and see what it does. 
@@ -157,11 +160,12 @@ filter(tips, sex == "Male" | smoker == "Yes")
 
 ```
 
-Now if you want to have a lot of combinations of `filter()` and `select()`, there are ways to do this that are  not saving a bunch of intermediary objects together, but if you're thinking about that now, just hold on, we're going to show you a much better way than doing that! 
+Now if you want to have a lot of combinations of `filter()` and `select()`, there are ways to do this that are not saving a bunch of intermediary objects together, but if you're thinking about that now, just hold on, we're going to show you a much better way than doing that! 
 
 So now we know how to pick apart a data frame based on either columns or rows, but what if we want to make new variables on the fly, just like in `pandas`?
 
 For that, we are going to use the `mutate()` function. 
+
 Let's return to our example from before where we wanted to convert the data in our `tips.csv` data set from USD to GBP.
 Right now, the conversion rate is that 1 USD is about .82 GBP.
 
@@ -184,12 +188,12 @@ mutate(tips,
 ```
 
 Up until this point, we have been doing some very basic commands.
+
 What if we want to get a bit more sophisticated?
 Let's say we only wanted a few columns and rows selected based on a some selection criteria.
 For example, let's only look at the columns `smoker` and `total_bill_gbp`, but only where `gbp_tip` is more than a fiver (£5).
 
 Now if we were doing this like we have been above, it might look something like this.
-
 
 ```{r}
 my_first_subset <- select(tips, smoker, tip)
@@ -216,9 +220,10 @@ tips %>%
 This is a lot more compact and hopefully easier to read!
 
 So what's going on here?
+
 Well remember what we said before about it being really important that the first argument of a `dplyr` verb wanting the tibble (data frame)?
 That's where the secret sauce is, what is happening is that the first object, in this case `tips` is getting passed through the pipe and secretly becoming the first argument of the next line.
-You can think of it as the code reading.
+You can think of it as the code reading:
 
 "Start with the `tips` tibble and then select the `smoker and tip columns"
 
@@ -247,9 +252,8 @@ tips %>%
 Most of what we have learned thus far is how to break down or add on to a tibble that we already have.
 But what if we want to start collapsing it down based on some parameters?
 For example, in our current state, we can't figure out the average tip between smokers and non-smokers.
-For that we need both the `group_by()` and `summerise()` functions. 
 
-For that we need `group_by` and summerise! 
+For that we need both the `group_by()` and `summerise()` functions. 
 
 ```{r}
 tips
@@ -290,5 +294,4 @@ tips %>%
 
 Now that was a lot of information!
 This this lesson we covered five of the major `dplyr` verbs and had an introduction to the pipe operator.
-
 
