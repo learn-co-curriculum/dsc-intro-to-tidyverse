@@ -2,7 +2,6 @@
 
 ## To Do
 
-* [ ] Edit Text
 * [ ] Crete Supplementary R Script
 * [ ] Create Supp R Markdown 
 
