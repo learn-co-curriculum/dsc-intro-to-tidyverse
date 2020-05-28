@@ -2,7 +2,7 @@
 
 ## Introduction
 
-No introduction to the R programming language in 2020 would be complete without an introduction to the [tidyverse](https://www.tidyverse.org/).
+No introduction to the R programming language would be complete without an introduction to the [tidyverse](https://www.tidyverse.org/).
 According to tidyverse website,
 
 > The tidyverse is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures.
